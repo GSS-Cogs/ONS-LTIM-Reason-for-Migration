@@ -2,6 +2,10 @@ pipeline {
     agent {
         label 'master'
     }
+    triggers {
+        upstream(upstreamProjects: '../Reference/ref_migration',
+                 threshold: hudson.model.Result.SUCCESS)
+    }
     stages {
         stage('Clean') {
             steps {
@@ -19,25 +23,15 @@ pipeline {
                 sh "jupyter-nbconvert --to python --stdout 'Long-term international migration 2.04 reason for migration tidydata.ipynb' | ipython"
             }
         }
-        stage('RDF Data Cube') {
-            agent {
-                docker {
-                    image 'cloudfluff/table2qb'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh "table2qb exec cube-pipeline --input-csv out/tidydata2_4.csv --output-file out/observations.ttl --column-config metadata/columns.csv --dataset-name 'ONS LTIM Reason for Migration' --base-uri http://gss-data.org.uk/ --dataset-slug ons-ltim-reason-for-migration"
-            }
-        }
         stage('Upload draftset') {
             steps {
                 script {
-                    def obslist = []
-                    for (def file : findFiles(glob: 'out/*.ttl')) {
-                        obslist.add("out/${file.name}")
+                    def csvs = []
+                    for (def file : findFiles(glob: 'out/*.csv')) {
+                        csvs.add("out/${file.name}")
                     }
-                    uploadCube('ONS LTIM Reason for Migration', obslist)
+                    uploadDraftset('ONS LTIM Reason for Migration', csvs,
+                                   'https://github.com/ONS-OpenData/ref_migration/raw/master/columns.csv')
                 }
             }
         }
