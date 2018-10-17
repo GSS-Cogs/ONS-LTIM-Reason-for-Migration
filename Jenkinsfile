@@ -30,16 +30,16 @@ pipeline {
                     for (def file : findFiles(glob: 'out/*.csv')) {
                         csvs.add("out/${file.name}")
                     }
-                    uploadTidy(csvs,
-                                   'https://github.com/ONS-OpenData/ref_migration/raw/master/columns.csv',
-                                   'ONS LTIM Reason for Migration')
+                    jobDraft.replace()
+                    dataset.delete('ONS LTIM Reason for Migration')
+                    uploadTidy(csvs, 'https://github.com/ONS-OpenData/ref_migration/raw/master/columns.csv')
                 }
             }
         }
         stage('Publish') {
             steps {
                 script {
-                    publishDraftset()
+                    jobDraft.publish()
                 }
             }
         }
