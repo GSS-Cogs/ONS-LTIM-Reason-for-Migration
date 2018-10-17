@@ -31,7 +31,7 @@ pipeline {
                         csvs.add("out/${file.name}")
                     }
                     jobDraft.replace()
-                    dataset.delete('ONS LTIM Reason for Migration')
+                    dataset.delete(util.slugise('ONS LTIM Reason for Migration'))
                     uploadTidy(csvs, 'https://github.com/ONS-OpenData/ref_migration/raw/master/columns.csv')
                 }
             }
