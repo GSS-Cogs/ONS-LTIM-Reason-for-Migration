@@ -1,0 +1,90 @@
+{
+  "@context": ["http://www.w3.org/ns/csvw", {"@language": "en"}],
+  "tables": [
+    {
+      "url": "https://ons-opendata.github.io/ref_migration/codelists/reason.csv",
+      "tableSchema": "https://ons-opendata.github.io/ref_migration/codelist-schema.json"
+    }, {
+      "url": "https://ons-opendata.github.io/ref_migration/codelists/migration-directions.csv",
+      "tableSchema": "https://ons-opendata.github.io/ref_common/codelist-schema.json"
+    }, {
+      "url": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
+      "tableSchema": "https://ons-opendata.github.io/ref_common/codelist-schema.json"
+    }, {
+      "url": "out/observations.csv",
+      "tableSchema": {
+        "columns": [{
+          "titles": "Geography",
+          "name": "geography",
+          "datatype": {
+            "format": "K[0-9]{8}"
+          },
+          "required": true
+        }, {
+          "titles": "Year",
+          "name": "period",
+          "datatype": {
+            "format": "^[0-9]{4}$"
+          },
+          "required": true
+        }, {
+          "titles": "Reason for migration",
+          "name": "reason",
+          "required": true
+        }, {
+          "titles": "Migration Flow",
+          "name": "flow",
+          "required": true
+        }, {
+          "titles": "Measure Type",
+          "name": "measure_type",
+          "datatype": {
+            "format": "^Count$"
+          }
+        }, {
+          "titles": "Value",
+          "name": "value",
+          "datatype": {
+            "format": "^(-|)([0-9]|[1-9][0-9]+)$"
+          },
+          "required": true
+        }, {
+          "titles": "CI",
+          "name": "ci",
+          "datatype": "number",
+          "required": true
+        }, {
+          "titles": "Unit",
+          "name": "unit",
+          "datatype": {
+            "base": "string",
+            "format": "^People \\(thousands\\)$"
+          },
+          "required": true
+        }],
+        "foreignKeys": [{
+          "columnReference": "reason",
+          "reference": {
+            "resource": "https://ons-opendata.github.io/ref_migration/codelists/reason.csv",
+            "columnReference": "notation"
+          }
+        }, {
+          "columnReference": "flow",
+          "reference": {
+            "resource": "https://ons-opendata.github.io/ref_migration/codelists/migration-directions.csv",
+            "columnReference": "notation"
+          }
+        }, {
+          "columnReference": "unit",
+          "reference": {
+            "resource": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
+            "columnReference": "label"
+          }
+        }],
+        "primaryKey": [
+          "geography", "year", "reason", "flow", "measure_type", "unit"
+        ]
+      }
+    }
+  ]
+}
