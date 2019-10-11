@@ -11,7 +11,11 @@
       "url": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
       "tableSchema": "https://ons-opendata.github.io/ref_common/codelist-schema.json"
     }, {
-      "url": "out/observations.csv",
+      "url": "https://gss-cogs.io/ref_migration/codelists/ips-markers.csv",
+      "tableSchema": "https://gss-cogs.io/ref_migration/codelists/codelist-schema.json",
+      "suppressOutput": true
+    },{
+      "url": "observations.csv",
       "tableSchema": {
         "columns": [{
           "titles": "Geography",
@@ -61,7 +65,11 @@
             "format": "^People \\(thousands\\)$"
           },
           "required": true
-        }],
+        }, {
+          "titles": "IPS Marker",
+          "name": "ips_marker",
+          "datatype": "string"
+          }],
         "foreignKeys": [{
           "columnReference": "reason",
           "reference": {
@@ -80,7 +88,13 @@
             "resource": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
             "columnReference": "label"
           }
-        }],
+        }, {
+          "columnReference": "ips_marker",
+          "reference": {
+            "resource": "https://gss-cogs.io/ref_migration/codelists/ips-markers.csv",
+            "columnReference": "notation"
+          }
+        },
         "primaryKey": [
           "geography", "year", "reason", "flow", "measure_type", "unit"
         ]
