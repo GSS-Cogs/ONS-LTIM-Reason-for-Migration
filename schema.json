@@ -77,13 +77,6 @@
         ],
         "foreignKeys": [
           {
-            "columnReference": "reason_for_migration",
-            "reference": {
-              "resource": "https://gss-cogs.github.io/ref_migration/codelists/reason.csv",
-              "columnReference": "notation"
-            }
-          },
-          {
             "columnReference": "ips_marker",
             "reference": {
               "resource": "https://gss-cogs.github.io/ref_migration/codelists/ips-markers.csv",
