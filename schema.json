@@ -27,7 +27,6 @@
             "name": "year",
             "datatype": "string"
           },
-          ,
           {
             "titles": "Reason for Migration",
             "required": true,
