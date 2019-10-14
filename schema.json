@@ -94,7 +94,7 @@
             "resource": "https://gss-cogs.io/ref_migration/codelists/ips-markers.csv",
             "columnReference": "notation"
           }
-        },
+        }],
         "primaryKey": [
           "geography", "year", "reason", "flow", "measure_type", "unit"
         ]
