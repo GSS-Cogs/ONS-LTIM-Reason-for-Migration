@@ -27,6 +27,13 @@
             "name": "year",
             "datatype": "string"
           },
+          ,
+          {
+            "titles": "Reason for Migration",
+            "required": true,
+            "name": "reason_for_migration",
+            "datatype": "string"
+          },
           {
             "titles": "Migration Flow",
             "required": true,
@@ -76,6 +83,7 @@
         "primaryKey": [
           "geography",
           "year",
+          "reason_for_migration",
           "migration_flow",
           "measure_type",
           "unit"
