@@ -107,7 +107,7 @@ tidy['Geography'] = tidy['Geography'].cat.rename_categories({
 tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.map(lambda x: pathify(x))
 
 tidy['Reason for migration'] = tidy['Reason for migration'].cat.rename_categories({
-    'Accompany or join - Looking for work': 'Accompany or join', 
+    'Accompany / join - Looking for work': 'Accompany or join', 
     'All reasons' : 'All reasons',
     'Formal study - Looking for work': 'Formal study',
     'No reason stated - Looking for work' : 'No reason stated', 
