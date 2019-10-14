@@ -3,7 +3,7 @@
 
 # # Long-term international migration 2.04, main reason for migration
 
-# In[195]:
+# In[28]:
 
 
 from gssutils import *
@@ -22,7 +22,7 @@ scraper = Scraper('https://www.ons.gov.uk/peoplepopulationandcommunity/populatio
 scraper
 
 
-# In[196]:
+# In[29]:
 
 
 tabs = scraper.distributions[0].as_databaker()
@@ -31,7 +31,7 @@ for i in tabs:
     print(i.name)
 
 
-# In[197]:
+# In[30]:
 
 
 tidied_sheets = []
@@ -68,6 +68,7 @@ for tab in tabs:
     
 import pandas as pd
 
+
 df = pd.concat(tidied_sheets, ignore_index = True).fillna('')
 df['Year'] = df.apply(lambda x: int(float(x['Year'])), axis = 1)
 df['Reason for Migration'] = df.apply(lambda x: x['Reason for Migration'][:-1] if x['Reason for Migration'].endswith('2') else x['Reason for Migration'], axis = 1)
@@ -76,17 +77,17 @@ df['Reason for Migration'] = df.apply(lambda x: x['Reason for Migration'][:-1] i
 df['CI'] = df.apply(lambda x: left(x['CI'], len(str(x['CI'])) - 2) if x['CI'].endswith('.0') else x['CI'], axis = 1)
 df = df.drop(['Reason2'], axis = 1)
 df.rename(columns={'OBS':'Value',
-                   'DATAMARKER':'Marker'}, 
+                   'DATAMARKER':'IPS Marker'}, 
                    inplace=True)
 df
 
 
-# In[198]:
+# In[31]:
 
 
 tidy = df[['Geography', 'Year', 'Reason for Migration', 'Migration Flow',
-             'Measure Type','Value','CI','Unit','Marker']]
-tidy['Marker'] = tidy.apply(lambda x: 'not-available' if x['Marker'] == ':' else x['Marker'], axis = 1)
+             'Measure Type','Value','CI','Unit','IPS Marker']]
+tidy['IPS Marker'] = tidy.apply(lambda x: 'not-available' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
 
 from IPython.core.display import HTML
 for col in tidy:
@@ -96,7 +97,7 @@ for col in tidy:
         display(tidy[col].cat.categories)
 
 
-# In[199]:
+# In[32]:
 
 
 tidy['Geography'] = tidy['Geography'].cat.rename_categories({
@@ -108,7 +109,7 @@ tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.ma
 tidy
 
 
-# In[200]:
+# In[33]:
 
 
 out = Path('out')
@@ -116,8 +117,11 @@ out.mkdir(exist_ok=True, parents=True)
 
 tidy.drop_duplicates().to_csv(out / ('observations.csv'), index = False)
 
+csvw = CSVWMetadata('https://gss-cogs.github.io/ref_migration/')
+csvw.create(out / 'observations.csv', out / 'observations.csv-schema.json')
 
-# In[201]:
+
+# In[34]:
 
 
 from gssutils.metadata import THEME
