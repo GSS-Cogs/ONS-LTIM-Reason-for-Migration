@@ -7,12 +7,17 @@
   ],
   "tables": [
     {
+      "url": "https://gss-cogs.github.io/ref_migration/codelists/reason.csv",
+      "tableSchema": "https://gss-cogs.github.io/ref_common/codelist-schema.json",
+      "suppressOutput": true
+    },
+    {
       "url": "https://gss-cogs.github.io/ref_migration/codelists/ips-markers.csv",
       "tableSchema": "https://gss-cogs.github.io/ref_migration/codelist-schema.json",
       "suppressOutput": true
     },
     {
-      "url": "out/observations.csv",
+      "url": "observations.csv",
       "tableSchema": {
         "columns": [
           {
@@ -28,7 +33,7 @@
             "datatype": "string"
           },
           {
-            "titles": "Reason for Migration",
+            "titles": "Reason for migration",
             "required": true,
             "name": "reason_for_migration",
             "datatype": "string"
@@ -71,6 +76,13 @@
           }
         ],
         "foreignKeys": [
+          {
+            "columnReference": "reason_for_migration",
+            "reference": {
+              "resource": "https://gss-cogs.github.io/ref_migration/codelists/reason.csv",
+              "columnReference": "notation"
+            }
+          },
           {
             "columnReference": "ips_marker",
             "reference": {
