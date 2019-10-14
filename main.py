@@ -3,7 +3,7 @@
 
 # # Long-term international migration 2.04, main reason for migration
 
-# In[28]:
+# In[35]:
 
 
 from gssutils import *
@@ -22,7 +22,7 @@ scraper = Scraper('https://www.ons.gov.uk/peoplepopulationandcommunity/populatio
 scraper
 
 
-# In[29]:
+# In[36]:
 
 
 tabs = scraper.distributions[0].as_databaker()
@@ -31,7 +31,7 @@ for i in tabs:
     print(i.name)
 
 
-# In[30]:
+# In[37]:
 
 
 tidied_sheets = []
@@ -82,12 +82,12 @@ df.rename(columns={'OBS':'Value',
 df
 
 
-# In[31]:
+# In[38]:
 
 
 tidy = df[['Geography', 'Year', 'Reason for Migration', 'Migration Flow',
              'Measure Type','Value','CI','Unit','IPS Marker']]
-tidy['IPS Marker'] = tidy.apply(lambda x: 'not-applicable' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
+#tidy['IPS Marker'] = tidy.apply(lambda x: 'not-available' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
 
 from IPython.core.display import HTML
 for col in tidy:
@@ -97,7 +97,7 @@ for col in tidy:
         display(tidy[col].cat.categories)
 
 
-# In[32]:
+# In[39]:
 
 
 tidy['Geography'] = tidy['Geography'].cat.rename_categories({
@@ -109,7 +109,7 @@ tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.ma
 tidy
 
 
-# In[33]:
+# In[40]:
 
 
 out = Path('out')
