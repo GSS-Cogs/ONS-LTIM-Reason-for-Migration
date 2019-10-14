@@ -87,7 +87,7 @@ df
 
 tidy = df[['Geography', 'Year', 'Reason for Migration', 'Migration Flow',
              'Measure Type','Value','CI','Unit','IPS Marker']]
-#tidy['IPS Marker'] = tidy.apply(lambda x: 'not-available' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
+tidy['IPS Marker'] = tidy.apply(lambda x: 'not-available' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
 
 from IPython.core.display import HTML
 for col in tidy:
