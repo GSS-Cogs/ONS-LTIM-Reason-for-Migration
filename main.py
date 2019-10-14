@@ -3,7 +3,7 @@
 
 # # Long-term international migration 2.04, main reason for migration
 
-# In[48]:
+# In[67]:
 
 
 from gssutils import *
@@ -22,7 +22,7 @@ scraper = Scraper('https://www.ons.gov.uk/peoplepopulationandcommunity/populatio
 scraper
 
 
-# In[49]:
+# In[68]:
 
 
 tabs = scraper.distributions[0].as_databaker()
@@ -31,7 +31,7 @@ for i in tabs:
     print(i.name)
 
 
-# In[61]:
+# In[69]:
 
 
 tidied_sheets = []
@@ -82,22 +82,12 @@ df.rename(columns={'OBS':'Value',
 df
 
 
-# In[55]:
+# In[70]:
 
 
 tidy = df[['Geography', 'Year', 'Reason for migration', 'Migration Flow',
              'Measure Type','Value','CI','Unit','IPS Marker']]
 tidy['IPS Marker'] = tidy.apply(lambda x: 'not-applicable' if x['IPS Marker'] == ':' else x['IPS Marker'], axis = 1)
-
-tidy['Reason for migration'] = tidy['Reason for migration'].cat.rename_categories({
-    'Accompany or join - Looking for work': 'Accompany or join', 
-    'All reasons' : 'All reasons',
-    'Formal study - Looking for work': 'Formal study',
-    'No reason stated - Looking for work' : 'No reason stated', 
-    'Other - Looking for work' : 'Ot',
-    'Work related - All', 'Work related - Definite job',
-    'Work related - Looking for work']
-})
 
 from IPython.core.display import HTML
 for col in tidy:
@@ -107,7 +97,7 @@ for col in tidy:
         display(tidy[col].cat.categories)
 
 
-# In[56]:
+# In[71]:
 
 
 tidy['Geography'] = tidy['Geography'].cat.rename_categories({
@@ -116,10 +106,21 @@ tidy['Geography'] = tidy['Geography'].cat.rename_categories({
 })
 tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.map(lambda x: pathify(x))
 
+tidy['Reason for migration'] = tidy['Reason for migration'].cat.rename_categories({
+    'Accompany or join - Looking for work': 'Accompany or join', 
+    'All reasons' : 'All reasons',
+    'Formal study - Looking for work': 'Formal study',
+    'No reason stated - Looking for work' : 'No reason stated', 
+    'Other - Looking for work' : 'Other',
+    'Work related - All' : 'Work related: All', 
+    'Work related - Definite job' : 'Work related: Definite job',
+    'Work related - Looking for work': 'Work related: Looking for work'
+})
+
 tidy
 
 
-# In[53]:
+# In[72]:
 
 
 out = Path('out')
@@ -131,7 +132,7 @@ csvw = CSVWMetadata('https://gss-cogs.github.io/ref_migration/')
 csvw.create(out / 'observations.csv', out / 'observations.csv-schema.json')
 
 
-# In[47]:
+# In[73]:
 
 
 from gssutils.metadata import THEME
