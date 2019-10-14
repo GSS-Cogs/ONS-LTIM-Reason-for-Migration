@@ -1,102 +1,84 @@
 {
-  "@context": ["http://www.w3.org/ns/csvw", {"@language": "en"}],
+  "@context": [
+    "http://www.w3.org/ns/csvw",
+    {
+      "@language": "en"
+    }
+  ],
   "tables": [
     {
-      "url": "https://ons-opendata.github.io/ref_migration/codelists/reason.csv",
-      "tableSchema": "https://ons-opendata.github.io/ref_migration/codelist-schema.json"
-    }, {
-      "url": "https://ons-opendata.github.io/ref_migration/codelists/migration-directions.csv",
-      "tableSchema": "https://ons-opendata.github.io/ref_common/codelist-schema.json"
-    }, {
-      "url": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
-      "tableSchema": "https://ons-opendata.github.io/ref_common/codelist-schema.json"
-    }, {
-      "url": "https://gss-cogs.io/ref_migration/codelists/ips-markers.csv",
-      "tableSchema": "https://gss-cogs.io/ref_migration/codelists/codelist-schema.json",
+      "url": "https://gss-cogs.github.io/ref_migration/codelists/ips-markers.csv",
+      "tableSchema": "https://gss-cogs.github.io/ref_migration/codelist-schema.json",
       "suppressOutput": true
-    },{
+    },
+    {
       "url": "observations.csv",
       "tableSchema": {
-        "columns": [{
-          "titles": "Geography",
-          "name": "geography",
-          "datatype": {
-            "format": "K[0-9]{8}"
+        "columns": [
+          {
+            "titles": "Geography",
+            "required": true,
+            "name": "geography",
+            "datatype": "string"
           },
-          "required": true
-        }, {
-          "titles": "Year",
-          "name": "period",
-          "datatype": {
-            "format": "^[0-9]{4}$"
+          {
+            "titles": "Year",
+            "required": true,
+            "name": "year",
+            "datatype": "string"
           },
-          "required": true
-        }, {
-          "titles": "Reason for migration",
-          "name": "reason",
-          "required": true
-        }, {
-          "titles": "Migration Flow",
-          "name": "flow",
-          "required": true
-        }, {
-          "titles": "Measure Type",
-          "name": "measure_type",
-          "datatype": {
-            "format": "^Count$"
-          }
-        }, {
-          "titles": "Value",
-          "name": "value",
-          "datatype": {
-            "format": "^(-|)([0-9]|[1-9][0-9]+)$"
+          {
+            "titles": "Migration Flow",
+            "required": true,
+            "name": "migration_flow",
+            "datatype": "string"
           },
-          "required": true
-        }, {
-          "titles": "CI",
-          "name": "ci",
-          "datatype": "number",
-          "required": true
-        }, {
-          "titles": "Unit",
-          "name": "unit",
-          "datatype": {
-            "base": "string",
-            "format": "^People \\(thousands\\)$"
+          {
+            "titles": "Measure Type",
+            "required": true,
+            "name": "measure_type",
+            "datatype": "string"
           },
-          "required": true
-        }, {
-          "titles": "IPS Marker",
-          "name": "ips_marker",
-          "datatype": "string"
-          }],
-        "foreignKeys": [{
-          "columnReference": "reason",
-          "reference": {
-            "resource": "https://ons-opendata.github.io/ref_migration/codelists/reason.csv",
-            "columnReference": "notation"
+          {
+            "titles": "Value",
+            "required": false,
+            "name": "value",
+            "datatype": "number"
+          },
+          {
+            "titles": "CI",
+            "required": false,
+            "name": "ci",
+            "datatype": "string"
+          },
+          {
+            "titles": "Unit",
+            "required": true,
+            "name": "unit",
+            "datatype": "string"
+          },
+          {
+            "titles": "IPS Marker",
+            "required": false,
+            "name": "ips_marker",
+            "datatype": "string"
           }
-        }, {
-          "columnReference": "flow",
-          "reference": {
-            "resource": "https://ons-opendata.github.io/ref_migration/codelists/migration-directions.csv",
-            "columnReference": "notation"
+        ],
+        "foreignKeys": [
+          {
+            "columnReference": "ips_marker",
+            "reference": {
+              "resource": "https://gss-cogs.github.io/ref_migration/codelists/ips-markers.csv",
+              "columnReference": "notation"
+            }
           }
-        }, {
-          "columnReference": "unit",
-          "reference": {
-            "resource": "https://ons-opendata.github.io/ref_common/codelists/measurement-units.csv",
-            "columnReference": "label"
-          }
-        }, {
-          "columnReference": "ips_marker",
-          "reference": {
-            "resource": "https://gss-cogs.io/ref_migration/codelists/ips-markers.csv",
-            "columnReference": "notation"
-          }
-        }],
+        ],
         "primaryKey": [
-          "geography", "year", "reason", "flow", "measure_type", "unit"
+          "geography",
+          "year",
+          "migration_flow",
+          "measure_type",
+          "unit"
         ]
       }
     }
