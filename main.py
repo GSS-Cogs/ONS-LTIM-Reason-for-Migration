@@ -3,7 +3,7 @@
 
 # # Long-term international migration 2.04, main reason for migration
 
-# In[67]:
+# In[1]:
 
 
 from gssutils import *
@@ -22,7 +22,7 @@ scraper = Scraper('https://www.ons.gov.uk/peoplepopulationandcommunity/populatio
 scraper
 
 
-# In[68]:
+# In[2]:
 
 
 tabs = scraper.distributions[0].as_databaker()
@@ -31,7 +31,7 @@ for i in tabs:
     print(i.name)
 
 
-# In[69]:
+# In[9]:
 
 
 tidied_sheets = []
@@ -44,7 +44,7 @@ for tab in tabs:
     obs = tab.filter("Year").fill(RIGHT).is_not_blank() | tab.filter("Year").shift(DOWN).fill(RIGHT).is_not_blank()
     flow = tab.filter("Year").expand(DOWN).one_of(['Inflow', 'Outflow'])
     reason = tab.filter("Year").expand(RIGHT).is_not_blank()
-    reason2 = tab.filter("Year").shift(DOWN).fill(RIGHT).is_not_blank()
+    reason2 = tab.filter("Year").shift(DOWN).fill(RIGHT)#.is_not_blank()
     geography = tab.filter("Year").expand(DOWN).one_of(['United Kingdom', 'England and Wales'])
     
     observations = year.fill(RIGHT) & obs.fill(DOWN) 
@@ -58,7 +58,7 @@ for tab in tabs:
             HDimConst('Unit','People (thousands)'),
             HDim(observations_ci, 'CI', DIRECTLY, RIGHT),
             HDimConst('Measure Type', 'Count'),
-            HDim(reason2, 'Reason2', CLOSEST, LEFT)
+            HDim(reason2, 'Reason2', DIRECTLY, ABOVE) #Should be directly above but doesn't account for the columns without reason2, work around used below but look into
     ]
     
     tidy_sheet = ConversionSegment(tab, dimensions, observations)
@@ -74,6 +74,8 @@ df['Year'] = df.apply(lambda x: int(float(x['Year'])), axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'][:-1] if x['Reason for migration'].endswith('2') else x['Reason for migration'], axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'] if x['Reason2'] == '' else x['Reason for migration'] + ' - ' + x['Reason2'], axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'][:-1] if x['Reason for migration'].endswith('1') else x['Reason for migration'], axis = 1)
+df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'].replace('/','or') if '/' in x['Reason for migration'] else x['Reason for migration'], axis = 1)
+df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'].replace(' - ',': ') if '-' in x['Reason for migration'] else x['Reason for migration'], axis = 1)
 df['CI'] = df.apply(lambda x: left(x['CI'], len(str(x['CI'])) - 2) if x['CI'].endswith('.0') else x['CI'], axis = 1)
 df = df.drop(['Reason2'], axis = 1)
 df.rename(columns={'OBS':'Value',
@@ -82,7 +84,7 @@ df.rename(columns={'OBS':'Value',
 df
 
 
-# In[70]:
+# In[10]:
 
 
 tidy = df[['Geography', 'Year', 'Reason for migration', 'Migration Flow',
@@ -97,7 +99,7 @@ for col in tidy:
         display(tidy[col].cat.categories)
 
 
-# In[71]:
+# In[74]:
 
 
 tidy['Geography'] = tidy['Geography'].cat.rename_categories({
@@ -107,11 +109,11 @@ tidy['Geography'] = tidy['Geography'].cat.rename_categories({
 tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.map(lambda x: pathify(x))
 
 tidy['Reason for migration'] = tidy['Reason for migration'].cat.rename_categories({
-    'Accompany / join - Looking for work': 'Accompany or join', 
+    'Accompany / join': 'Accompany or join', 
     'All reasons' : 'All reasons',
-    'Formal study - Looking for work': 'Formal study',
-    'No reason stated - Looking for work' : 'No reason stated', 
-    'Other - Looking for work' : 'Other',
+    'Formal study': 'Formal study',
+    'No reason stated' : 'No reason stated', 
+    'Other' : 'Other',
     'Work related - All' : 'Work related: All', 
     'Work related - Definite job' : 'Work related: Definite job',
     'Work related - Looking for work': 'Work related: Looking for work'
