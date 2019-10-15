@@ -72,10 +72,9 @@ import pandas as pd
 df = pd.concat(tidied_sheets, ignore_index = True).fillna('')
 df['Year'] = df.apply(lambda x: int(float(x['Year'])), axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'][:-1] if x['Reason for migration'].endswith('2') else x['Reason for migration'], axis = 1)
-df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'] if x['Reason2'] == '' else x['Reason for migration'] + ' - ' + x['Reason2'], axis = 1)
+df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'] if x['Reason2'] == '' else x['Reason for migration'] + ': ' + x['Reason2'], axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'][:-1] if x['Reason for migration'].endswith('1') else x['Reason for migration'], axis = 1)
 df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'].replace('/','or') if '/' in x['Reason for migration'] else x['Reason for migration'], axis = 1)
-df['Reason for migration'] = df.apply(lambda x: x['Reason for migration'].replace(' - ',': ') if '-' in x['Reason for migration'] else x['Reason for migration'], axis = 1)
 df['CI'] = df.apply(lambda x: left(x['CI'], len(str(x['CI'])) - 2) if x['CI'].endswith('.0') else x['CI'], axis = 1)
 df = df.drop(['Reason2'], axis = 1)
 df.rename(columns={'OBS':'Value',
