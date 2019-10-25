@@ -3,7 +3,7 @@
 
 # # Long-term international migration 2.04, main reason for migration
 
-# In[1]:
+# In[8]:
 
 
 from gssutils import *
@@ -22,7 +22,7 @@ scraper = Scraper('https://www.ons.gov.uk/peoplepopulationandcommunity/populatio
 scraper
 
 
-# In[2]:
+# In[9]:
 
 
 tabs = scraper.distributions[0].as_databaker()
@@ -31,7 +31,7 @@ for i in tabs:
     print(i.name)
 
 
-# In[9]:
+# In[10]:
 
 
 tidied_sheets = []
@@ -83,7 +83,7 @@ df.rename(columns={'OBS':'Value',
 df
 
 
-# In[10]:
+# In[11]:
 
 
 tidy = df[['Geography', 'Year', 'Reason for migration', 'Migration Flow',
@@ -98,7 +98,7 @@ for col in tidy:
         display(tidy[col].cat.categories)
 
 
-# In[74]:
+# In[12]:
 
 
 tidy['Geography'] = tidy['Geography'].cat.rename_categories({
@@ -108,20 +108,20 @@ tidy['Geography'] = tidy['Geography'].cat.rename_categories({
 tidy['Migration Flow'].cat.categories = tidy['Migration Flow'].cat.categories.map(lambda x: pathify(x))
 
 tidy['Reason for migration'] = tidy['Reason for migration'].cat.rename_categories({
-    'Accompany / join': 'Accompany or join', 
-    'All reasons' : 'All reasons',
-    'Formal study': 'Formal study',
-    'No reason stated' : 'No reason stated', 
-    'Other' : 'Other',
-    'Work related - All' : 'Work related: All', 
-    'Work related - Definite job' : 'Work related: Definite job',
-    'Work related - Looking for work': 'Work related: Looking for work'
+    'Accompany or join': 'accompany-or-join', 
+    'All reasons' : 'all-reasons',
+    'Formal study': 'formal-study',
+    'No reason stated' : 'no-reason-stated', 
+    'Other' : 'other',
+    'Work related: All' : 'work-related-all', 
+    'Work related: Definite job' : 'work-related-definite-job',
+    'Work related: Looking for work': 'work-related-looking-for-work'
 })
 
 tidy
 
 
-# In[72]:
+# In[13]:
 
 
 out = Path('out')
@@ -133,7 +133,7 @@ csvw = CSVWMetadata('https://gss-cogs.github.io/ref_migration/')
 csvw.create(out / 'observations.csv', out / 'observations.csv-schema.json')
 
 
-# In[73]:
+# In[14]:
 
 
 from gssutils.metadata import THEME
